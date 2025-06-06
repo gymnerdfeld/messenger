@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        html {
+            font-family: monospace;
+            font-size: 120%;
+            background-color: black;
+            color: lightgreen;
+        }
+        .chat_line {
+            border-bottom: dotted 2px lightgreen;
+            padding: 5px;
+            margin: 0;
+        }
+        .chat_line:first-of-type {
+            border-top: dotted 2px lightgreen;
+        }
+        .chat_line .username {
+            font-weight: bold;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat</h1>
+    
+    <div id="app">
+        <!-- FIXME 2: Blende die "Seiten" der App korrekte ein und aus -->
+        <div>
+            <!-- FIXME 1: Verbinde das Template mit dem JS Code -->
+            <input type="text" placeholder="Username">&nbsp;
+            <button>Join chat room</button>
+        </div>
+        <div>
+            <!-- FIXME 4: Zeige die Chatnachrichte (Autor:in und Message) an -->
+            <p class="chat_line">
+                <span class="username">Hans: </span>Guten Morgen!
+            </p>
+            <p>
+                <input type="text" placeholder="Enter message" v-model="message">&nbsp;
+                <button v-on:click="send_message()">Send!</button>
+            </p>
+            <p>
+                <!-- FIXME 6.1: Knopf zum Verlassen des Chats -->
+            </p>
+        </div>
+    </div>
+
+    <script src="libs/vue.global.js"></script>
+    <script src="libs/axios.js"></script>
+    <script>
+        var {createApp, reactive} = Vue  // "import"
+        //axios wird automatisch importiert
+
+        function setup() {
+            var state = reactive({
+                page: "ask_username",
+                username: "",
+                messages: [],
+                message: "",
+            })
+
+            async function get_messages() {
+                // FIXME 3: Lade die Liste der Nachrichten vom Back-End. 
+                // Betrachte dazu die Datei chat_api.py
+            }
+            // FIXME 7:
+            //setInterval(get_messages, 3000)
+
+            async function join_chat() {
+                state.page = "chat"
+                get_messages()
+            }
+
+            async function send_message() {
+                // FIXME 5: Senden einer Nachricht
+            }
+
+            // FIXME 6.2: Funktion für das Verlassen des Chats.
+
+
+            return {
+                "state": state,
+                "join_chat": join_chat,
+                "send_message": send_message,
+            }
+        }
+
+        var app = createApp({"setup": setup})
+        app.mount("#app")
+    </script>
+</body>
+</html>
