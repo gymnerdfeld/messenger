@@ -1,6 +1,6 @@
-# Chat
+# Messenger / Chat
 
-Das Back-End (`messenger_api.py`) ist (praktisch) fertig. Das Front-End (messenger_client.html`) existiert erst lückenhaft.
+Das Back-End (`messenger_api.py`) ist (praktisch) fertig. Das Front-End (`messenger_client.html`) existiert erst lückenhaft.
 
 In dieser Aufgabe vervollständigst du eine Chat-App.  Für alle ausser der letzen Aufgabe
 musst du nur das Front-End bearbeiten.
