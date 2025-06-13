@@ -30,22 +30,23 @@
     
     <div id="app">
         <!-- FIXME 2: Blende die "Seiten" der App korrekte ein und aus -->
-        <div>
+        <div v-if="state.page === 'ask_username'">
             <!-- FIXME 1: Verbinde das Template mit dem JS Code -->
-            <input type="text" placeholder="Username">&nbsp;
-            <button>Join chat room</button>
+            <input type="text" placeholder="Username" v-model="state.username" v-on:keydown.enter="join_chat()">&nbsp;
+            <button v-on:click="join_chat()">Join chat room</button>
         </div>
-        <div>
+        <div v-else-if="state.page === 'chat'">
             <!-- FIXME 4: Zeige die Chatnachrichte (Autor:in und Message) an -->
-            <p class="chat_line">
-                <span class="username">Hans: </span>Guten Morgen!
+            <p class="chat_line" v-for="msg in state.messages">
+                <span class="username">{{msg.username}}: </span>{{msg.message}}
             </p>
             <p>
-                <input type="text" placeholder="Enter message" v-model="message">&nbsp;
+                <input type="text" placeholder="Enter message" v-model="state.message" v-on:keydown.enter="send_message()">&nbsp;
                 <button v-on:click="send_message()">Send!</button>
             </p>
             <p>
                 <!-- FIXME 6.1: Knopf zum Verlassen des Chats -->
+                <button v-on:click="leave_chat()">Leave Chat</button>
             </p>
         </div>
     </div>
@@ -67,9 +68,11 @@
             async function get_messages() {
                 // FIXME 3: Lade die Liste der Nachrichten vom Back-End. 
                 // Betrachte dazu die Datei chat_api.py
+                var response = await axios.get("/api/chat/")
+                state.messages = response.data
             }
             // FIXME 7:
-            //setInterval(get_messages, 3000)
+            setInterval(get_messages, 3000)
 
             async function join_chat() {
                 state.page = "chat"
@@ -78,14 +81,20 @@
 
             async function send_message() {
                 // FIXME 5: Senden einer Nachricht
+                await axios.post("/api/chat/", {username: state.username, message: state.message})
+                state.message = ""
             }
 
             // FIXME 6.2: Funktion für das Verlassen des Chats.
-
+            function leave_chat() {
+                state.page = 'ask_username'
+                state.username = ''
+            }
 
             return {
                 "state": state,
                 "join_chat": join_chat,
+                "leave_chat": leave_chat,
                 "send_message": send_message,
             }
         }
