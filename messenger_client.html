@@ -42,6 +42,11 @@
             </p>
             <p>
                 <input type="text" placeholder="Enter message" v-model="state.message" v-on:keydown.enter="send_message()">&nbsp;
+                <select v-model="state.receiver">
+                    <option value="">All</option>
+                    <!-- FIXME 8: Zeige die Usernamen aller User an in der Selectbox an -->
+                </select>&nbsp;
+                <input type="text" placeholder="Password" v-model="state.password" v-on:keydown.enter="send_message()">&nbsp;
                 <button v-on:click="send_message()">Send!</button>
             </p>
             <p>
@@ -53,9 +58,10 @@
 
     <script src="libs/vue.global.js"></script>
     <script src="libs/axios.js"></script>
-    <script>
+    <script type="module">
         var {createApp, reactive} = Vue  // "import"
         //axios wird automatisch importiert
+        import {deriveKey, encryptMessage, decryptMessage} from "./crypto.js"
 
         function setup() {
             var state = reactive({
@@ -63,6 +69,8 @@
                 username: "",
                 messages: [],
                 message: "",
+                receiver: "",
+                password: "",
             })
 
             async function get_messages() {
@@ -82,7 +90,12 @@
 
             async function send_message() {
                 // FIXME 5: Senden einer Nachricht
-                await axios.post("/api/chat/", {sender: state.username, content: state.message})
+                let msg = state.message
+                if (state.password) {
+                    // FIXME: Message verschlüsseln
+                    msg = "Encrypted message 2354680rdfjkbngfrui324jkhd"
+                }
+                await axios.post("/api/chat/", {sender: state.username, receiver: state.receiver, content: msg})
                 state.message = ""
             }
 
