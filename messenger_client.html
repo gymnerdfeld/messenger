@@ -38,7 +38,7 @@
         <div v-else-if="state.page === 'chat'">
             <!-- FIXME 4: Zeige die Chatnachrichte (Autor:in und Message) an -->
             <p class="chat_line" v-for="msg in state.messages">
-                <span class="username">{{msg.username}}: </span>{{msg.message}}
+                <span class="username">{{msg.username}}: </span>{{msg.content}}
             </p>
             <p>
                 <input type="text" placeholder="Enter message" v-model="state.message" v-on:keydown.enter="send_message()">&nbsp;
@@ -76,12 +76,13 @@
 
             async function join_chat() {
                 state.page = "chat"
+                await axios.post("/api/chat/", {sender: state.username, content: "Joining chat!", type: "join"})
                 get_messages()
             }
 
             async function send_message() {
                 // FIXME 5: Senden einer Nachricht
-                await axios.post("/api/chat/", {username: state.username, message: state.message})
+                await axios.post("/api/chat/", {sender: state.username, content: state.message})
                 state.message = ""
             }
 
