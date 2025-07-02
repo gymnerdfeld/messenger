@@ -38,7 +38,7 @@
         <div v-else-if="state.page === 'chat'">
             <!-- FIXME 4: Zeige die Chatnachrichte (Autor:in und Message) an -->
             <p class="chat_line" v-for="msg in state.messages">
-                <span class="username">{{msg.username}}: </span>{{msg.content}}
+                <span class="username">{{msg.sender}}: </span>{{msg.content}}
             </p>
             <p>
                 <input type="text" placeholder="Enter message" v-model="state.message" v-on:keydown.enter="send_message()">&nbsp;
@@ -72,7 +72,7 @@
                 state.messages = response.data
             }
             // FIXME 7:
-            setInterval(get_messages, 3000)
+            //setInterval(get_messages, 3000)
 
             async function join_chat() {
                 state.page = "chat"
@@ -91,6 +91,18 @@
                 state.page = 'ask_username'
                 state.username = ''
             }
+
+
+            let event_source = new EventSource("/api/chat/stream")
+
+            function eventHandler(event) {
+                let msg = JSON.parse(event.data)
+                //Message anzeigen
+                state.messages.push(msg)
+
+            }
+
+            event_source.onmessage = eventHandler
 
             return {
                 "state": state,
