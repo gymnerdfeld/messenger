@@ -116,7 +116,8 @@
                 let msg = state.message
                 if (state.password) {
                     // FIXME: Message verschlüsseln
-                    msg = "Encrypted message 2354680rdfjkbngfrui324jkhd"
+                    let key = deriveKey(state.password)
+                    msg = encryptMessage(key, msg)
                 }
                 await axios.post("/api/chat/", {sender: state.username, receiver: state.receiver, content: msg})
                 state.message = ""
