@@ -53,6 +53,17 @@
                 <!-- FIXME 6.1: Knopf zum Verlassen des Chats -->
                 <button v-on:click="leave_chat()">Leave Chat</button>
             </p>
+            <p>
+                <input type="text" placeholder="Encrypted Message" v-model="state.encryptedMessage">
+                &nbsp;
+                <input type="password" placeholder="Password" v-model="state.decryptionPassword">
+                &nbsp;
+                <button v-on:click="decrypt()">Decrypt!</button>
+                <br>
+                <span style="border: 1px solid white; padding: 3px; margin: 3px;">
+                    {{state.decryptedMessage}}
+                </span>
+            </p>
         </div>
     </div>
 
@@ -71,6 +82,9 @@
                 message: "",
                 receiver: "",
                 password: "",
+                encryptedMessage: "",
+                decryptionPassword: "",
+                decryptedMessage: "",
             })
 
             function process_message(msg) {
@@ -114,6 +128,11 @@
                 state.username = ''
             }
 
+            function decrypt() {
+                // FIXME: decrypt state.encryptedMessage with state.decryptionPassword
+                // and store it in state.decryptedMessage
+                state.decryptedMessage = "Jag älskar dig"
+            }
 
             let event_source = new EventSource("/api/chat/stream")
 
@@ -129,6 +148,7 @@
                 "join_chat": join_chat,
                 "leave_chat": leave_chat,
                 "send_message": send_message,
+                "decrypt": decrypt,
             }
         }
 
