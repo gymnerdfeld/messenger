@@ -73,11 +73,20 @@
                 password: "",
             })
 
+            function process_message(msg) {
+                // Normale Message
+                state.messages.push(msg)
+
+                // Neuer User
+            }
+
             async function get_messages() {
                 // FIXME 3: Lade die Liste der Nachrichten vom Back-End. 
                 // Betrachte dazu die Datei chat_api.py
                 var response = await axios.get("/api/chat/")
-                state.messages = response.data
+                for (let msg of response.data) {
+                    process_message(msg)
+                }
             }
             // FIXME 7:
             //setInterval(get_messages, 3000)
@@ -110,9 +119,7 @@
 
             function eventHandler(event) {
                 let msg = JSON.parse(event.data)
-                //Message anzeigen
-                state.messages.push(msg)
-
+                process_message(msg)
             }
 
             event_source.onmessage = eventHandler
